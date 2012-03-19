@@ -1,5 +1,7 @@
 package org.orecraft.twittercraft;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -11,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TwitterCraft extends JavaPlugin
 {
+	String strLine;
     protected static final Logger logger = Logger.getLogger("Minecraft");
     
     @Override
@@ -42,6 +45,9 @@ public class TwitterCraft extends JavaPlugin
     	}
 		return false;
     }
+    
+    //Combine function /////////////////////////////////////////////////////////
+    
     String combine(String[] s, String glue)
     {
       int k = s.length;
@@ -53,17 +59,31 @@ public class TwitterCraft extends JavaPlugin
         out.append(glue).append(s[x]);
       return out.toString();
     }
+    
+    //onDisable function //////////////////////////////////////////////////////
 
     public void onDisable()
     {
       PluginDescriptionFile pdfFile = getDescription();
       System.out.println("[" + pdfFile.getName() + "]" + " version " + pdfFile.getVersion() + " is disabled!");
     }
-
+    
+    //onEnable function //////////////////////////////////////////////////
+    
     public void onEnable()
     {
+        if (!new File(getDataFolder().toString()).exists()) {
+            new File(getDataFolder().toString()).mkdir();
+        }
         PluginDescriptionFile pdfFile = getDescription();
-
+        File file = new File(this.getDataFolder() + "/username.txt");
+        if (!file.exists()) {
+        	try {
+        		file.createNewFile();
+        	} catch (IOException e) {
+        		System.out.println("[TwitterCraft] Unable to create 'username.txt' file in " + file.getPath() + "/" + file.getName());
+        	}
+        }
         System.out.println("[" + pdfFile.getName() + "]" + " version " + pdfFile.getVersion() + " is enabled!");
     }
 }
